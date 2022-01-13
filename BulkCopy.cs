@@ -317,7 +317,7 @@ namespace BulkCopy
             List<Task> taskList = new List<Task>();
             foreach (var tmpDataList in data.Batch((int)Math.Ceiling(data.Count / (decimal)concurrencyLevel)))
             {
-                taskList.Add(bulkUpdate(conn, targetTableName, tmpDataList.ToList(), keyMappingList, valueMappingList, externalTransaction));
+                taskList.Add(Task.Run(() => bulkUpdate(conn, targetTableName, tmpDataList.ToList(), keyMappingList, valueMappingList, externalTransaction)));
             }
             await Task.WhenAll(taskList.ToArray());
         }
@@ -371,7 +371,7 @@ namespace BulkCopy
             List<Task> taskList = new List<Task>();
             foreach (var tmpDataList in data.Batch((int)Math.Ceiling(data.Count / (decimal)concurrencyLevel)))
             {
-                taskList.Add(bulkDelete(conn, targetTableName, tmpDataList.ToList(), keyMappingList, externalTransaction));
+                taskList.Add(Task.Run(() => bulkDelete(conn, targetTableName, tmpDataList.ToList(), keyMappingList, externalTransaction)));
             }
             await Task.WhenAll(taskList.ToArray());
         }
