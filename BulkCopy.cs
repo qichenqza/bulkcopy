@@ -9,14 +9,17 @@ using System.Threading.Tasks;
 
 namespace BulkCopy
 {
-    public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int size)
+    public static class ListExtension
     {
-        if(size <= 0) return null;
-
-        while (source.Any())
+        public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int size)
         {
-            yield return source.Take(size);
-            source = source.Skip(size);
+            if(size <= 0) throw new Exception("size for batch must > 0");
+
+            while (source.Any())
+            {
+                yield return source.Take(size);
+                source = source.Skip(size);
+            }
         }
     }
 
